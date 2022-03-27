@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import api from '../api'
-import User from "./User";
+
 const UsersList = () => {
     const [users, setUsers] = useState(api.users.fetchAll())
-    const [count, setCount] = useState(users.length)
-    console.log(users)
 
     const getBadgeColor = () => {
     let color = 'badge '
@@ -23,7 +21,6 @@ const UsersList = () => {
     }
 
     const renderTableHead = () => {
-        if (users.length === 0) return 
         return <thead>
             <tr>
                 <th>Имя</th>
@@ -37,16 +34,14 @@ const UsersList = () => {
     };
     
     const hendleUsers = (id) => {
-        setUsers((prevState) => prevState.filter((user) => user !==id))
+        setUsers((prevState) => prevState.filter((user) => user._id !==id))
     }
 
     const renderTableBody = () => {
         return (
             users.map((user) => (
       
-            <tr
-            key = {user._id}
-            > 
+            <tr key = {user._id}> 
             <td>{user.name}</td>
             <td>{user.qualities.map((item) => {
                 const getBadgeClasess = () => {
@@ -60,7 +55,7 @@ const UsersList = () => {
             <td>{user.completedMeetings}</td>
             <td>{user.rate}/5</td>
             <td>
-                <button className="btn btn-danger" onClick={() => hendleUsers(user)}>
+                <button className="btn btn-danger" onClick={() => hendleUsers(user._id)}>
                 delete
                 </button>
             </td>
@@ -74,7 +69,7 @@ const UsersList = () => {
         <>
             <span className = {getBadgeColor()}>{renderQuantity()}</span>
         <table className="table">
-            {renderTableHead()}
+            {users.length ? renderTableHead() : ''}
             <tbody>
                 {renderTableBody()}
                
