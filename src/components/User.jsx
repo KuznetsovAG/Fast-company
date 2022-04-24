@@ -38,8 +38,16 @@ const User = ({ user, onToggleBookMark, onDelete }) => {
     );
 };
 User.propTypes = {
-    user: PropTypes.object.isRequired,
-    onToggleBookMark: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired
+    user: PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        profession: PropTypes.object,
+        qualities: PropTypes.array,
+        completedMeetings: PropTypes.number,
+        rate: PropTypes.number,
+        bookmark: PropTypes.bool
+    }).isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onToggleBookMark: PropTypes.func.isRequired
 };
 export default User;
