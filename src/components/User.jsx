@@ -2,52 +2,55 @@ import React from "react";
 import BookMark from "./BookMark";
 import Qualites from "./Qualites";
 import PropTypes from "prop-types";
-const User = ({ user, onToggleBookMark, onDelete }) => {
+const User = ({
+    _id,
+    name,
+    qualities,
+    profession,
+    completedMeetings,
+    rate,
+    onDelete,
+    bookmark,
+    onToggleBookMark
+}) => {
     return (
         <tr>
-            <td>{user.name}</td>
+            <td>{name}</td>
             <td>
-                {user.qualities.map((item) => (
-                    <Qualites
-                        key={item._id}
-                        name={item.name}
-                        color={item.color}
-                    />
+                {qualities.map((qual) => (
+                    <Qualites {...qual} key={qual._id} />
                 ))}
             </td>
-
-            <td>{user.profession.name}</td>
-            <td>{user.completedMeetings}</td>
-            <td>{user.rate}</td>
+            <td>{profession.name}</td>
+            <td>{completedMeetings}</td>
+            <td>{rate} /5</td>
             <td>
                 <BookMark
-                    status={user.bookmark}
-                    onToggleBookMark={onToggleBookMark}
-                    id={user._id}
+                    status={bookmark}
+                    onClick={() => onToggleBookMark(_id)}
                 />
             </td>
             <td>
                 <button
-                    className={"btn btn-danger"}
-                    onClick={() => onDelete(user._id)}
+                    onClick={() => onDelete(_id)}
+                    className="btn btn-danger"
                 >
-                    Удалить
+                    delete
                 </button>
             </td>
         </tr>
     );
 };
 User.propTypes = {
-    user: PropTypes.shape({
-        _id: PropTypes.string,
-        name: PropTypes.string,
-        profession: PropTypes.object,
-        qualities: PropTypes.array,
-        completedMeetings: PropTypes.number,
-        rate: PropTypes.number,
-        bookmark: PropTypes.bool
-    }).isRequired,
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    qualities: PropTypes.array,
+    profession: PropTypes.object.isRequired,
+    completedMeetings: PropTypes.number.isRequired,
+    rate: PropTypes.number.isRequired,
     onDelete: PropTypes.func.isRequired,
+    bookmark: PropTypes.bool,
     onToggleBookMark: PropTypes.func.isRequired
 };
+
 export default User;
