@@ -63,7 +63,7 @@ const Users = () => {
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(
             filteredUsers,
-            [sortBy.path],
+            [sortBy.iter],
             [sortBy.order]
         );
         const usersCrop = paginate(sortedUsers, currentPage, pageSize);
