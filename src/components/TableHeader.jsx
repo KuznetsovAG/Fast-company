@@ -3,20 +3,27 @@ import PropTypes from "prop-types";
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
     const handleSort = (item) => {
-        // if (selectedSort.path === item) {
-        //     onSort({
-        //         iter: item,
-        //         order: selectedSort.order === "asc" ? "desc" : "asc"
-        //     });
-        // } else {
-        //     onSort({ iter: item, order: "asc" });
-        // }
-
-        onSort({
-            iter: item,
-            order: selectedSort.order === "asc" ? "desc" : "asc"
-        });
+        if (selectedSort.path === item) {
+            onSort({
+                ...selectedSort,
+                order: selectedSort.order === "asc" ? "desc" : "asc"
+            });
+        } else {
+            onSort({ path: item, order: "asc" });
+        }
     };
+
+    const renderSortError = (selectedSort, currentPath) => {
+        if (selectedSort.path === currentPath) {
+            if (selectedSort.order === "asc") {
+                return <i className="bi bi-caret-down-fill"></i>;
+            } else {
+                return <i className="bi bi-caret-up-fill"></i>;
+            }
+        }
+        return null;
+    };
+
     return (
         <thead>
             <tr>
@@ -32,18 +39,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                         scope="col"
                     >
                         {columns[column].name}
-                        {selectedSort.iter === columns[column].path ? (
-                            <i
-                                className={
-                                    "bi bi-caret-" +
-                                    (selectedSort.order === "asc"
-                                        ? "up-fill"
-                                        : "down-fill")
-                                }
-                            ></i>
-                        ) : (
-                            <></>
-                        )}
+                        {renderSortError(selectedSort, columns[column].path)}
                     </th>
                 ))}
                 {/* <th onClick={() => handleSort("name")} scope="col">
