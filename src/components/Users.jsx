@@ -8,11 +8,18 @@ import SearchStatus from "../components/SearchStatus";
 import UsersTable from "./UsersTable";
 import _ from "lodash";
 import UserPage from "./UserPage";
+import Search from "./Search";
 const Users = ({ match }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
+    const [search, setSearch] = useState("");
+    const handleSearch = (e) => {
+        e.preventDefault();
+        clearFilter();
+        setSearch(e.target.value);
+    };
     const userId = match.params.userId;
     const pageSize = 8;
     const [users, setUsers] = useState();
@@ -48,6 +55,10 @@ const Users = ({ match }) => {
         setSortBy(item);
     };
 
+    const clearFilter = () => {
+        setSelectedProf();
+    };
+
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
@@ -58,6 +69,10 @@ const Users = ({ match }) => {
                       JSON.stringify(users.profession) ===
                       JSON.stringify(selectedProf)
               )
+            : search
+            ? users.filter((user) =>
+                  user.name.toLowerCase().includes(search.toLowerCase())
+              )
             : users;
 
         const count = filteredUsers.length;
@@ -67,9 +82,6 @@ const Users = ({ match }) => {
             [sortBy.order]
         );
         const usersCrop = paginate(sortedUsers, currentPage, pageSize);
-        const clearFilter = () => {
-            setSelectedProf();
-        };
 
         return userId ? (
             <UserPage userId={userId} />
@@ -94,6 +106,7 @@ const Users = ({ match }) => {
                     )}
                     <div className="d-flex flex-column">
                         <SearchStatus length={count} />
+                        <Search onChange={handleSearch} search={search} />
                         {count > 0 && (
                             <UsersTable
                                 users={usersCrop}
@@ -120,7 +133,7 @@ const Users = ({ match }) => {
 };
 Users.propTypes = {
     users: PropTypes.array,
-    match: PropTypes.array
+    match: PropTypes.object
 };
 
 export default Users;
