@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { paginate } from "../utils/paginate";
-import Pagination from "./Pagination";
+import { paginate } from "../../../utils/paginate";
+import Pagination from "../../common/Pagination";
 import PropTypes from "prop-types";
-import GroupList from "./GroupList";
-import api from "../api";
-import SearchStatus from "../components/SearchStatus";
-import UsersTable from "./UsersTable";
+import GroupList from "../../common/GroupList";
+import api from "../../../api";
+import SearchStatus from "../../ui/SearchStatus";
+import UsersTable from "../../ui/UsersTable";
 import _ from "lodash";
-import UserPage from "./UserPage";
-import Search from "./Search";
+import UserPage from "../UserPage/UserPage";
 const Users = ({ match }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
-    const [search, setSearch] = useState("");
-    const handleSearch = (e) => {
-        e.preventDefault();
-        clearFilter();
-        setSearch(e.target.value);
+    const [searchQuery, setSearchQuery] = useState("");
+    const handleSearchQuery = ({ target }) => {
+        setSelectedProf(undefined);
+        setSearchQuery(target.value);
     };
     const userId = match.params.userId;
     const pageSize = 8;
@@ -45,9 +43,10 @@ const Users = ({ match }) => {
     }, []);
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, searchQuery]);
 
     const handleProfessionSelect = (item) => {
+        if (searchQuery !== "") setSearchQuery("");
         setSelectedProf(item);
     };
 
@@ -69,9 +68,9 @@ const Users = ({ match }) => {
                       JSON.stringify(users.profession) ===
                       JSON.stringify(selectedProf)
               )
-            : search
+            : searchQuery
             ? users.filter((user) =>
-                  user.name.toLowerCase().includes(search.toLowerCase())
+                  user.name.toLowerCase().includes(searchQuery.toLowerCase())
               )
             : users;
 
@@ -106,7 +105,13 @@ const Users = ({ match }) => {
                     )}
                     <div className="d-flex flex-column">
                         <SearchStatus length={count} />
-                        <Search onChange={handleSearch} search={search} />
+                        <input
+                            type="text"
+                            name="searchQuery"
+                            placeholder="Search..."
+                            onChange={handleSearchQuery}
+                            value={searchQuery}
+                        />
                         {count > 0 && (
                             <UsersTable
                                 users={usersCrop}

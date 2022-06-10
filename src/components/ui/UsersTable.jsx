@@ -2,9 +2,9 @@ import React from "react";
 // import User from "./User";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import BookMark from "./BookMark";
-import QualitesList from "./QualitesList";
-import Table from "./Table";
+import BookMark from "../common/BookMark";
+import Qualites from "./qualities";
+import { Table } from "../common/table";
 const UsersTable = ({
     users,
     onSort,
@@ -23,7 +23,7 @@ const UsersTable = ({
         },
         qualities: {
             name: "Качества",
-            component: (user) => <QualitesList qualities={user.qualities} />
+            component: (user) => <Qualites qualities={user.qualities} />
         },
         profession: { path: "profession.name", name: "Профессия" },
         completedMeetings: {

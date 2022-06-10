@@ -13,16 +13,16 @@ module.exports = {
     rules: {
         indent: ["error", 4],
         semi: [2, "always"],
+        "multiline-ternary": 0,
         "space-before-function-paren": [
             "error",
             { anonymous: "always", named: "never" }
         ],
         quotes: ["error", "double", { allowTemplateLiterals: true }]
     },
-    plugins: ["react", "prettier"],
+    plugins: ["react"],
     extends: [
         "plugin:react/recommended",
         "standard",
-        "plugin:prettier/recommended"
     ]
 };

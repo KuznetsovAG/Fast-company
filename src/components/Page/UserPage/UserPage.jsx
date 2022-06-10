@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import api from "../api";
-import QualitesList from "./QualitesList";
-import { useHistory } from "react-router-dom";
-
-const UserPage = ({ userId }) => {
-    const history = useHistory();
+import api from "../../../api";
+import QualitesList from "../../ui/qualities/QualitesList";
+import { Link, useParams } from "react-router-dom";
+import ChangePage from "../ChangePage/ChangePage";
+const UserPage = () => {
     const [user, setUser] = useState();
-    useEffect(() => {
-        api.users.getById(userId).then((data) => setUser(data));
-    });
-    const handleClick = () => {
-        history.push("/users");
-    };
+    const params = useParams();
+    const { userId, isEdit } = params;
+
+    useEffect(
+        () => api.users.getById(userId).then((data) => setUser(data)),
+        []
+    );
+    if (isEdit === "edit") {
+        return <ChangePage />;
+    }
 
     if (user) {
         return (
@@ -22,7 +25,9 @@ const UserPage = ({ userId }) => {
                 <QualitesList qualities={user.qualities} />
                 <p>completedMeetings: {user.completedMeetings}</p>
                 <h2>Rate: {user.rate}</h2>
-                <button onClick={handleClick}> Все Пользователи</button>
+                <button>
+                    <Link to={`/users/${userId}/edit`}>Изменить</Link>
+                </button>
             </div>
         );
     } else {
